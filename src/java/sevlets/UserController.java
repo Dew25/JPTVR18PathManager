@@ -44,6 +44,9 @@ public class UserController extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         String path = request.getServletPath();
         switch (path) {
+            case "/index":
+                
+                break;
             case "/showFormLogin":
                 request.getRequestDispatcher("/showFormLogin.jsp")
                         .forward(request, response);
@@ -72,8 +75,7 @@ public class UserController extends HttpServlet {
                 session = request.getSession(false);
                 if(session != null) session.invalidate();
                 request.setAttribute("info", "Вы вышли");
-                request.getRequestDispatcher("/index.jsp")
-                        .forward(request, response);
+                response.sendRedirect("index.jsp");
                 break;
             case "/showFormAddUser":
                 request.getRequestDispatcher("/showFormAddUser.jsp")
