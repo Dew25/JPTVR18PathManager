@@ -68,7 +68,7 @@ public class ResourceController extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/showFormAddResource":
-                request.getRequestDispatcher("/showFormAddResource.jsp")
+                request.getRequestDispatcher("/pages/showFormAddResource.jsp")
                         .forward(request, response);
                 break;
             case "/createResource":
@@ -89,7 +89,7 @@ public class ResourceController extends HttpServlet {
             case "/listResources":
                 List<Resource> listResources = resourceFacade.findByUser(user);
                 request.setAttribute("listResources", listResources);
-                request.getRequestDispatcher("/showListResources.jsp")
+                request.getRequestDispatcher("/pages/showListResources.jsp")
                         .forward(request, response);
                 break;
             case "/deleteResource":
