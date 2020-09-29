@@ -7,6 +7,7 @@ package session;
 
 import entity.Resource;
 import entity.UserResources;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,7 +18,7 @@ import javax.persistence.PersistenceContext;
  */
 @Stateless
 public class UserResourcesFacade extends AbstractFacade<UserResources> {
-
+@EJB private ResourceFacade resourceFacade;
     @PersistenceContext(unitName = "JPTVR18PathManagerPU")
     private EntityManager em;
 
@@ -34,7 +35,7 @@ public class UserResourcesFacade extends AbstractFacade<UserResources> {
         em.createQuery("DELETE FROM UserResources ur WHERE ur.resource = :resource")
                 .setParameter("resource", deleteResource)
                 .executeUpdate();
-                
+        resourceFacade.remove(deleteResource);
     }
     
 }

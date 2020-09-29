@@ -27,13 +27,15 @@ public class User implements Serializable {
     @Column(unique = true)
     private String login;
     private String password;
+    private String salts;
 
     public User() {
     }
 
-    public User(String login, String password) {
+    public User(String login, String password, String salts) {
         this.login = login;
         this.password = password;
+        this.salts = salts;
     }
 
     public Long getId() {
@@ -96,6 +98,14 @@ public class User implements Serializable {
     @Override
     public String toString() {
         return "User{" + "id=" + id + ", login=" + login + ", password=" + password + '}';
+    }
+
+    public String getSalts() {
+        return salts;
+    }
+
+    public void setSalts(String salts) {
+        this.salts = salts;
     }
     
     

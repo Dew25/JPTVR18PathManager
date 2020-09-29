@@ -5,6 +5,7 @@
  */
 package sevlets;
 
+import utils.MakeHash;
 import entity.User;
 import java.io.IOException;
 import javax.ejb.EJB;
@@ -61,7 +62,9 @@ public class UserController extends HttpServlet {
                     request.getRequestDispatcher("/showFormLogin")
                         .forward(request, response);
                 }
-                if(!password.equals(user.getPassword())){
+                MakeHash mh = new MakeHash();
+                String encriptPassword = mh.createHash(password,user.getSalts());
+                if(!encriptPassword.equals(user.getPassword())){
                     request.setAttribute("info", "Нет такого логина или пароля");
                     request.getRequestDispatcher("/showFormLogin")
                         .forward(request, response);
@@ -69,6 +72,7 @@ public class UserController extends HttpServlet {
                 HttpSession session = request.getSession(true);
                 session.setAttribute("user", user);
                 request.setAttribute("info", "Привет, "+user.getLogin());
+                request.setAttribute("user", user);
                 request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
                 break;
@@ -85,7 +89,10 @@ public class UserController extends HttpServlet {
             case "/createUser":
                 login = request.getParameter("login");
                 password = request.getParameter("password");
-                user = new User(login,password);
+                MakeHash makeHash = new MakeHash();
+                String salts = makeHash.createSalts();
+                String encodingPassword = makeHash.createHash(password, salts);
+                user = new User(login,encodingPassword,salts);
                 userFacade.create(user);
                 request.setAttribute("info", "Добавлен пользователь с логином "+user.getLogin());
                 request.getRequestDispatcher("/index.jsp")

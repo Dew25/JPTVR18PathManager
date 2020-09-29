@@ -30,6 +30,7 @@ import session.UserResourcesFacade;
     "/showFormAddResource",
     "/createResource",
     "/listResources",
+    "/showResource",
     "/deleteResource",
     "/showEditResource",
     "/updateResource"
@@ -92,8 +93,15 @@ public class ResourceController extends HttpServlet {
                 request.getRequestDispatcher("/pages/showListResources.jsp")
                         .forward(request, response);
                 break;
+            case "/showResource":
+                String id = request.getParameter("idRecource");
+                resource = resourceFacade.find(Long.parseLong(id));
+                request.setAttribute("resource", resource);
+                request.getRequestDispatcher("/pages/showResource.jsp")
+                        .forward(request, response);
+                break;
             case "/deleteResource":
-                String id = request.getParameter("id");
+                id = request.getParameter("idResource");
                 if(id == null || "".equals(id)){
                     request.setAttribute("info", "Нет такого ресурса");
                     request.getRequestDispatcher("/showListResources")
@@ -109,8 +117,6 @@ public class ResourceController extends HttpServlet {
                     break;
                 }
                 userResourcesFacade.removeByResource(deleteResource);
-               
-                //resourceFacade.remove(deleteResource);
                 request.setAttribute("info", "Ресурс "+deleteResource.getName()+" удален.");
                 request.getRequestDispatcher("/listResources")
                         .forward(request, response);
@@ -119,7 +125,20 @@ public class ResourceController extends HttpServlet {
                 
                 break;
             case "/updateResource":
-                
+                id = request.getParameter("idRecource");
+                resource = resourceFacade.find(Long.parseLong(id));
+                name = request.getParameter("name");
+                url = request.getParameter("url");
+                login = request.getParameter("login");
+                password = request.getParameter("password");
+                resource.setLogin(login);
+                resource.setUrl(url);
+                resource.setName(name);
+                resource.setPassword(password);
+                resourceFacade.edit(resource);
+                request.setAttribute("resource", resource);
+                request.getRequestDispatcher("/pages/showResource.jsp")
+                        .forward(request, response);
                 break;
             
         }
