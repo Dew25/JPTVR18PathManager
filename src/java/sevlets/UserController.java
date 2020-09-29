@@ -5,8 +5,10 @@
  */
 package sevlets;
 
+import entity.Role;
 import utils.MakeHash;
 import entity.User;
+import entity.UserRoles;
 import java.io.IOException;
 import javax.ejb.EJB;
 import javax.servlet.ServletException;
@@ -15,22 +17,53 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import session.RoleFacade;
 import session.UserFacade;
+import session.UserRolesFacade;
 
 /**
  *
  * @author Melnikov
  */
-@WebServlet(name = "UserController", urlPatterns = {
+@WebServlet(name = "UserController", loadOnStartup = 1, urlPatterns = {
     "/showFormAddUser",
     "/createUser",
     "/showFormLogin",
     "/login",
     "/logout"
 })
+
 public class UserController extends HttpServlet {
     @EJB
     private UserFacade userFacade;
+    @EJB
+    private RoleFacade roleFacade;
+    @EJB
+    private UserRolesFacade userRolesFacade;
+
+    @Override
+    public void init() throws ServletException {
+        int countRoles = roleFacade.count();
+        if(countRoles > 0) return;
+        MakeHash mh = new MakeHash();
+        String salts = mh.createSalts();
+        String password = mh.createHash("123123", salts);
+        User admin = new User("admin", password, salts);
+        userFacade.create(admin);
+        UserRoles userRoles = new UserRoles();
+        userRoles.setUser(admin);
+        Role roleUser = new Role("ADMIN");
+        roleFacade.create(roleUser);
+        userRoles.setRole(roleUser);
+        userRolesFacade.create(userRoles);
+        roleUser = new Role("USER");
+        roleFacade.create(roleUser);
+        userRoles.setRole(roleUser);
+        userRolesFacade.create(userRoles);
+    }
+    
+    
+    
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -94,6 +127,10 @@ public class UserController extends HttpServlet {
                 String encodingPassword = makeHash.createHash(password, salts);
                 user = new User(login,encodingPassword,salts);
                 userFacade.create(user);
+                Role role = roleFacade.getRole("USER");
+                UserRoles userRoles = new UserRoles(user, role);
+                userRolesFacade.create(userRoles);
+                
                 request.setAttribute("info", "Добавлен пользователь с логином "+user.getLogin());
                 request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);

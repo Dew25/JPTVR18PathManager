@@ -5,6 +5,7 @@
  */
 package sevlets;
 
+import utils.UserManager;
 import entity.Resource;
 import entity.User;
 import entity.UserResources;
@@ -61,11 +62,13 @@ public class ResourceController extends HttpServlet {
                 .forward(request, response);
         }
         User user = (User) session.getAttribute("user");
-        if(user == null){
+        UserManager userManager = new UserManager();
+        if(!userManager.isRole(user,"USER")){
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);
         }
+        
         String path = request.getServletPath();
         switch (path) {
             case "/showFormAddResource":
