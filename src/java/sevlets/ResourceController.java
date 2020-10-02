@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.ResourceFacade;
 import session.UserResourcesFacade;
+import session.UserRolesFacade;
 
 /**
  *
@@ -42,6 +43,8 @@ public class ResourceController extends HttpServlet {
     private ResourceFacade resourceFacade;
     @EJB
     private UserResourcesFacade userResourcesFacade;
+    @EJB
+    private UserRolesFacade userRolesFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -62,8 +65,8 @@ public class ResourceController extends HttpServlet {
                 .forward(request, response);
         }
         User user = (User) session.getAttribute("user");
-        UserManager userManager = new UserManager();
-        if(!userManager.isRole(user,"USER")){
+        //UserManager userManager = new UserManager();
+        if(!userRolesFacade.checkRole(user,"USER")){
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);

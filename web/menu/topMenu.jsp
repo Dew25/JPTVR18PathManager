@@ -18,6 +18,11 @@
       <li class="nav-item">
         <a class="nav-link" href="listResources">Список ресурсов</a>
       </li>
+        <li class="nav-item">
+          <c:if test="${topRoleCurrnetUser eq 'ADMIN'}">
+            <a class="nav-link" href="showListUsers">Список пользователей</a>
+          </c:if>
+      </li>
 
     </c:if>
     <c:if test="${loginOn eq null or loginOn eq false}"> 
@@ -29,11 +34,14 @@
         <div class="dropdown-menu">
           <c:if test="${loginOn ne null && loginOn eq true}">
             <a class="dropdown-item" href="logout">Выйти </a>
-            <a class="dropdown-item" href="showFormAddResource"</a>
-            <a class="dropdown-item" href="listResources">Something else here</a>
+            <a class="dropdown-item" href="showFoormAddResurce">Добавить новый ресурс</a>
+            <a class="dropdown-item" href="listResources">Список ресурсов</a>
+            <c:if test="${topRoleCurrnetUser eq 'ADMIN'}">
+                <a class="dropdown-item" href="showListUsers">Список пользователей</a>
+            </c:if>
           </c:if>
         <c:if test="${loginOn eq null or loginOn eq false}"> 
-            <a class="dropdown-item" href="showFormLogin">Something else here</a>
+            <a class="dropdown-item" href="showFormLogin">Войти</a>
         </c:if>
         </div>
       </li>
