@@ -68,7 +68,7 @@ public class ResourceController extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/showFormAddResource":
-                request.getRequestDispatcher("/showFormAddResource.jsp")
+                request.getRequestDispatcher("/pages/showFormAddResource.jsp")
                         .forward(request, response);
                 break;
             case "/createResource":
@@ -89,7 +89,7 @@ public class ResourceController extends HttpServlet {
             case "/listResources":
                 List<Resource> listResources = resourceFacade.findByUser(user);
                 request.setAttribute("listResources", listResources);
-                request.getRequestDispatcher("/showListResources.jsp")
+                request.getRequestDispatcher("/pages/showListResources.jsp")
                         .forward(request, response);
                 break;
             case "/deleteResource":
@@ -110,16 +110,33 @@ public class ResourceController extends HttpServlet {
                 }
                 userResourcesFacade.removeByResource(deleteResource);
                
-                //resourceFacade.remove(deleteResource);
+                resourceFacade.remove(deleteResource);
                 request.setAttribute("info", "Ресурс "+deleteResource.getName()+" удален.");
                 request.getRequestDispatcher("/listResources")
                         .forward(request, response);
                 break;
             case "/showEditResource":
-                
+                id = request.getParameter("id");
+                resource = resourceFacade.find(Long.parseLong(id));
+                request.setAttribute("resource", resource);
+                request.getRequestDispatcher("/pages/showFormEditResource.jsp")
+                        .forward(request, response);
                 break;
             case "/updateResource":
-                
+                id = request.getParameter("id");
+                name = request.getParameter("name");
+                url = request.getParameter("url");
+                login = request.getParameter("login");
+                password = request.getParameter("password");
+                resource = resourceFacade.find(Long.parseLong(id));
+                resource.setName(name);
+                resource.setLogin(login);
+                resource.setUrl(url);
+                resource.setPassword(password);
+                resourceFacade.edit(resource);
+                request.setAttribute("info", "Ресурс "+resource.getName()+ " обновлен");
+                request.getRequestDispatcher("/listResources")
+                        .forward(request, response);
                 break;
             
         }

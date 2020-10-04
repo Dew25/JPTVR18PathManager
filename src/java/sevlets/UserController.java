@@ -48,7 +48,7 @@ public class UserController extends HttpServlet {
                 
                 break;
             case "/showFormLogin":
-                request.getRequestDispatcher("/showFormLogin.jsp")
+                request.getRequestDispatcher("/systemPage/showFormLogin.jsp")
                         .forward(request, response);
                 break;
             case "/login":
@@ -78,7 +78,7 @@ public class UserController extends HttpServlet {
                 response.sendRedirect("index.jsp");
                 break;
             case "/showFormAddUser":
-                request.getRequestDispatcher("/showFormAddUser.jsp")
+                request.getRequestDispatcher("/pages/showFormAddUser.jsp")
                         .forward(request, response);
                 break;
             case "/createUser":

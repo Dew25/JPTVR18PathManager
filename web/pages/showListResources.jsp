@@ -15,10 +15,12 @@
                 <li>URL: ${resource.url}</li>
                 <li>login: ${resource.login}</li>
                 <li>password: ${resource.password}</li>
-                <li>------------------------------</li>
+                <br>------------------------------
               </td>
               <td>
-                <a href="deleteResource?id=${resource.id}">Удалить</a>
+                  <a href="deleteResource?id=${resource.id}">Удалить</a><br>
+                  <a href="showEditResource?id=${resource.id}">Изменить</a><br>
+                  
               </td>
             </tr>
         </c:forEach>
