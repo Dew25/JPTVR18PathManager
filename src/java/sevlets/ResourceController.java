@@ -21,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import session.ResourceFacade;
 import session.UserResourcesFacade;
+import session.UserRolesFacade;
 
 /**
  *
@@ -30,6 +31,7 @@ import session.UserResourcesFacade;
     "/showFormAddResource",
     "/createResource",
     "/listResources",
+    "/showResource",
     "/deleteResource",
     "/showEditResource",
     "/updateResource"
@@ -40,6 +42,8 @@ public class ResourceController extends HttpServlet {
     private ResourceFacade resourceFacade;
     @EJB
     private UserResourcesFacade userResourcesFacade;
+    @EJB
+    private UserRolesFacade userRolesFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -60,11 +64,13 @@ public class ResourceController extends HttpServlet {
                 .forward(request, response);
         }
         User user = (User) session.getAttribute("user");
-        if(user == null){
+        //UserManager userManager = new UserManager();
+        if(!userRolesFacade.checkRole(user,"USER")){
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);
         }
+        
         String path = request.getServletPath();
         switch (path) {
             case "/showFormAddResource":
@@ -92,8 +98,15 @@ public class ResourceController extends HttpServlet {
                 request.getRequestDispatcher("/pages/showListResources.jsp")
                         .forward(request, response);
                 break;
+            case "/showResource":
+                String id = request.getParameter("idRecource");
+                resource = resourceFacade.find(Long.parseLong(id));
+                request.setAttribute("resource", resource);
+                request.getRequestDispatcher("/pages/showResource.jsp")
+                        .forward(request, response);
+                break;
             case "/deleteResource":
-                String id = request.getParameter("id");
+                id = request.getParameter("idResource");
                 if(id == null || "".equals(id)){
                     request.setAttribute("info", "Нет такого ресурса");
                     request.getRequestDispatcher("/showListResources")
@@ -109,33 +122,32 @@ public class ResourceController extends HttpServlet {
                     break;
                 }
                 userResourcesFacade.removeByResource(deleteResource);
-               
                 resourceFacade.remove(deleteResource);
                 request.setAttribute("info", "Ресурс "+deleteResource.getName()+" удален.");
                 request.getRequestDispatcher("/listResources")
                         .forward(request, response);
                 break;
             case "/showEditResource":
-                id = request.getParameter("id");
+                id = request.getParameter("idResource");
                 resource = resourceFacade.find(Long.parseLong(id));
                 request.setAttribute("resource", resource);
                 request.getRequestDispatcher("/pages/showFormEditResource.jsp")
                         .forward(request, response);
                 break;
             case "/updateResource":
-                id = request.getParameter("id");
+                id = request.getParameter("idResource");
+                resource = resourceFacade.find(Long.parseLong(id));
                 name = request.getParameter("name");
                 url = request.getParameter("url");
                 login = request.getParameter("login");
                 password = request.getParameter("password");
-                resource = resourceFacade.find(Long.parseLong(id));
-                resource.setName(name);
                 resource.setLogin(login);
                 resource.setUrl(url);
+                resource.setName(name);
                 resource.setPassword(password);
                 resourceFacade.edit(resource);
-                request.setAttribute("info", "Ресурс "+resource.getName()+ " обновлен");
-                request.getRequestDispatcher("/listResources")
+                request.setAttribute("resource", resource);
+                request.getRequestDispatcher("/pages/showResource.jsp")
                         .forward(request, response);
                 break;
             

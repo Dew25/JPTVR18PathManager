@@ -6,7 +6,9 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-    <h1>Список ресурсов</h1>
+
+<h4 class="w-100 text-center ">Список ресурсов:</h4>
+<div class="form-group w-50 mx-auto">
     <table>
         <c:forEach var="resource" items="${listResources}">
             <tr> 
@@ -19,9 +21,10 @@
               </td>
               <td>
                   <a href="deleteResource?id=${resource.id}">Удалить</a><br>
-                  <a href="showEditResource?id=${resource.id}">Изменить</a><br>
-                  
+                  <a href="showEditResource?idResource=${resource.id}">Изменить</a><br>
+
               </td>
             </tr>
         </c:forEach>
     </table>
+</div>

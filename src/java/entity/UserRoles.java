@@ -7,35 +7,34 @@ package entity;
 
 import java.io.Serializable;
 import java.util.Objects;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  *
  * @author Melnikov
  */
 @Entity
-public class User implements Serializable {
+public class UserRoles implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
-    private String login;
-    private String password;
-    private String salts;
+    @OneToOne
+    private User user;
+    @OneToOne
+    private Role role;
 
-    public User() {
+    public UserRoles() {
     }
 
-    public User(String login, String password, String salts) {
-        this.login = login;
-        this.password = password;
-        this.salts = salts;
+    public UserRoles(User user, Role role) {
+        this.user = user;
+        this.role = role;
     }
 
     public Long getId() {
@@ -46,28 +45,28 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getLogin() {
-        return login;
+    public User getUser() {
+        return user;
     }
 
-    public void setLogin(String login) {
-        this.login = login;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public String getPassword() {
-        return password;
+    public Role getRole() {
+        return role;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     @Override
     public int hashCode() {
         int hash = 7;
-        hash = 41 * hash + Objects.hashCode(this.id);
-        hash = 41 * hash + Objects.hashCode(this.login);
-        hash = 41 * hash + Objects.hashCode(this.password);
+        hash = 29 * hash + Objects.hashCode(this.id);
+        hash = 29 * hash + Objects.hashCode(this.user);
+        hash = 29 * hash + Objects.hashCode(this.role);
         return hash;
     }
 
@@ -82,14 +81,14 @@ public class User implements Serializable {
         if (getClass() != obj.getClass()) {
             return false;
         }
-        final User other = (User) obj;
-        if (!Objects.equals(this.login, other.login)) {
-            return false;
-        }
-        if (!Objects.equals(this.password, other.password)) {
-            return false;
-        }
+        final UserRoles other = (UserRoles) obj;
         if (!Objects.equals(this.id, other.id)) {
+            return false;
+        }
+        if (!Objects.equals(this.user, other.user)) {
+            return false;
+        }
+        if (!Objects.equals(this.role, other.role)) {
             return false;
         }
         return true;
@@ -97,15 +96,7 @@ public class User implements Serializable {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", login=" + login + ", password=" + password + '}';
-    }
-
-    public String getSalts() {
-        return salts;
-    }
-
-    public void setSalts(String salts) {
-        this.salts = salts;
+        return "UserRoles{" + "id=" + id + ", user=" + user.getLogin() + ", role=" + role.getName() + '}';
     }
     
     
