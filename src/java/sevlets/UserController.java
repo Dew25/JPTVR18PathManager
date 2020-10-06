@@ -106,8 +106,7 @@ public class UserController extends HttpServlet {
                 session.setAttribute("user", user);
                 request.setAttribute("info", "Привет, "+user.getLogin());
                 request.setAttribute("user", user);
-                String topRoleCurrnetUser = userRolesFacade.getTopRoleName(user);
-                request.setAttribute("topRoleCurrnetUser", topRoleCurrnetUser);
+                
                 request.getRequestDispatcher("/index.jsp")
                         .forward(request, response);
                 break;

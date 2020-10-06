@@ -5,6 +5,7 @@
  */
 package sevlets;
 
+import entity.Role;
 import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -18,8 +19,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import session.RoleFacade;
 import session.UserFacade;
 import session.UserRolesFacade;
+import utils.MakeHash;
 
 /**
  *
@@ -27,6 +30,8 @@ import session.UserRolesFacade;
  */
 @WebServlet(name = "AdminController", urlPatterns = {
     "/showListUsers",
+    "/editUserRoles",
+    "/updateUserRoles",
     
 })
 public class AdminController extends HttpServlet {
@@ -34,6 +39,8 @@ public class AdminController extends HttpServlet {
     private UserRolesFacade userRolesFacade;
  @EJB
     private UserFacade userFacade;
+ @EJB
+    private RoleFacade roleFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -76,7 +83,49 @@ public class AdminController extends HttpServlet {
                 request.getRequestDispatcher("/admin/showListUsers.jsp")
                         .forward(request, response);
                 break;
-            
+            case "/editUserRoles":
+                String userId = request.getParameter("userId");
+                User editUser = userFacade.find(Long.parseLong(userId));
+                if(editUser == null){
+                    request.setAttribute("info", "Не найден пользователь с иднетификатором "+userId);
+                    request.getRequestDispatcher("/admin/showListUsers.jsp")
+                        .forward(request, response);
+                }
+                request.setAttribute("editUser", editUser);
+                List<Role> listRoles = roleFacade.findAll();
+                request.setAttribute("listRoles", listRoles);
+                String topRoleEditUser = userRolesFacade.getTopRoleName(editUser);
+                request.setAttribute("topRoleEditUser", topRoleEditUser);
+                
+                request.getRequestDispatcher("/admin/editUserRolesForm.jsp")
+                    .forward(request, response);
+                break;
+            case "/updateUserRoles":
+                userId = request.getParameter("userId");
+                String newLogin = request.getParameter("newLogin");
+                String newPassword = request.getParameter("newPassword");
+                String newRole = request.getParameter("newRole");
+                Role newRoleUpdateUser = roleFacade.find(Long.parseLong(newRole));
+                if(userId == null){
+                    request.setAttribute("info", "Не найден пользователь с иднетификатором "+userId);
+                    request.getRequestDispatcher("/showListUsers")
+                        .forward(request, response);
+                }
+                User updateUser = userFacade.find(Long.parseLong(userId));
+                userRolesFacade.deleteAllUserRoles(updateUser);
+                userRolesFacade.setNewRoleToUser(newRoleUpdateUser.getName(),updateUser);
+                updateUser.setLogin(newLogin);
+                if(newPassword != null && !newPassword.isEmpty()){
+                    MakeHash mh = new MakeHash();
+                    String salts = mh.createSalts();
+                    newPassword = mh.createHash(newPassword, salts);
+                    updateUser.setPassword(newPassword);
+                }
+                userFacade.edit(updateUser);
+                request.setAttribute("info", "Данные пользователя "+updateUser.getLogin()+" изменены");
+                    request.getRequestDispatcher("/showListUsers")
+                        .forward(request, response);
+                break;
         }
     }
 
