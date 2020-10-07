@@ -5,9 +5,7 @@
  */
 package session;
 
-import entity.Resource;
-import entity.UserResources;
-import javax.ejb.EJB;
+import entity.Role;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -17,8 +15,8 @@ import javax.persistence.PersistenceContext;
  * @author Melnikov
  */
 @Stateless
-public class UserResourcesFacade extends AbstractFacade<UserResources> {
-@EJB private ResourceFacade resourceFacade;
+public class RoleFacade extends AbstractFacade<Role> {
+
     @PersistenceContext(unitName = "JPTVR18PathManagerPU")
     private EntityManager em;
 
@@ -27,14 +25,18 @@ public class UserResourcesFacade extends AbstractFacade<UserResources> {
         return em;
     }
 
-    public UserResourcesFacade() {
-        super(UserResources.class);
+    public RoleFacade() {
+        super(Role.class);
     }
 
-    public void removeByResource(Resource deleteResource) {
-        em.createQuery("DELETE FROM UserResources ur WHERE ur.resource = :resource")
-                .setParameter("resource", deleteResource)
-                .executeUpdate();
+    public Role getRole(String roleName) {
+        try {
+            return (Role) em.createQuery("SELECT r FROM Role r WHERE r.name = :roleName")
+                .setParameter("roleName", roleName)
+                .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
     }
     
 }
