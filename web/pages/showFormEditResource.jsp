@@ -1,13 +1,29 @@
-
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
-
-    <h1>Изменение ресурса!</h1>
+    <h3 class="w-100 text-center">Изменение ресурса!</h3>
     <form action="updateResource" method="POST">
-        <input type="hidden" name="idResource" value="${resource.id}">
-      Имя ресурса: <input type="text" name="name" value="${resource.name}"><br>
-      URL ресурса: <input type="text" name="url" value="${resource.url}"><br>
-      Логин: <input type="text" name="login" value="${resource.login}"><br>
-      Пароль: <input type="text" name="password" value="${resource.password}"><br>
-      <input type="submit" value="Изменить">
+        <div class="form-group w-50 mx-auto">    
+            <label for="name">Название ресурса</label>
+            <input type="hidden" name="idResource" value="${resource.id}">
+            <input value="${resource.name}"  type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" placeholder="name">
+            <small id="nameHelp" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group w-50 mx-auto">    
+            <label for="url">Url ресурса</label>
+            <input value="${resource.url}"  type="text" class="form-control" id="url" name="url" aria-describedby="urlHelp" placeholder="resurce">
+            <small id="urlHelp" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group w-50 mx-auto">    
+            <label for="login">Логин</label>
+            <input value="${resource.login}"  type="text" class="form-control" id="login" name="login" aria-describedby="loginHelp" placeholder="Логин">
+            <small id="emailHelp" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group w-50 mx-auto">    
+            <label for="password">Пароль</label>
+            <input value="${resource.password}"  type="text" class="form-control" id="password" name="password" aria-describedby="passwordHelp" placeholder="Пароль">
+            <small id="emailHelp" class="form-text text-muted"></small>
+        </div>
+        <div class="form-group w-50 mx-auto text-center">
+            <button type="submit" class="btn btn-primary w-50 mt-4">Изменить</button>
+        </div>                  
     </form>
  

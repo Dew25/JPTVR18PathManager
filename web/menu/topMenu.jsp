@@ -7,7 +7,7 @@
   </button>
   <div class="collapse navbar-collapse" id="navbarColor01">
     <ul class="navbar-nav mr-auto">
-    <c:if test="${loginOn ne null && loginOn eq true}">
+    <c:if test="${topRoleCurrnetUser ne null}">
       <li class="nav-item active">
         <a class="nav-link" href="logout">Выйти <span class="sr-only">(current)</span></a>
       </li>
@@ -23,14 +23,14 @@
           </c:if>
       </li>
     </c:if>
-    <c:if test="${loginOn eq null or loginOn eq false}"> 
+    <c:if test="${topRoleCurrnetUser eq null}"> 
       <li class="nav-item">
         <a class="nav-link" href="showFormLogin">Войти в систему</a>
       </li>
     </c:if>
       <li class="nav-item dropdown">
         <div class="dropdown-menu">
-          <c:if test="${loginOn ne null && loginOn eq true}">
+          <c:if test="${topRoleCurrnetUser ne null}">
             <a class="dropdown-item" href="logout">Выйти </a>
             <a class="dropdown-item" href="showFoormAddResurce">Добавить новый ресурс</a>
             <a class="dropdown-item" href="listResources">Список ресурсов</a>
@@ -38,7 +38,7 @@
                 <a class="dropdown-item" href="showListUsers">Список пользователей</a>
             </c:if>
           </c:if>
-        <c:if test="${loginOn eq null or loginOn eq false}"> 
+        <c:if test="${topRoleCurrnetUser eq null}"> 
             <a class="dropdown-item" href="showFormLogin">Войти</a>
         </c:if>
         </div>
@@ -50,5 +50,5 @@
     </form>
   </div>
 </nav>
-
 <div class="jumbotron bg-white">
+

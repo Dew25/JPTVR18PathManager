@@ -27,6 +27,7 @@ import session.UserRolesFacade;
 public class SecureFilter implements Filter {
     @EJB 
     private UserRolesFacade userRolesFacade;
+
     public SecureFilter() {
     }    
     @Override
@@ -34,23 +35,29 @@ public class SecureFilter implements Filter {
             FilterChain chain)
             throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest)request;
+        String topRoleCurrnetUser=null;
         HttpSession session = httpRequest.getSession(false);
         if(session == null){
-            httpRequest.setAttribute("loginOn", false);
+            httpRequest.setAttribute("topRoleCurrnetUser", topRoleCurrnetUser);
             chain.doFilter(request, response);
             return;
         }
         User user = (User) session.getAttribute("user");
         if(user == null){
-            httpRequest.setAttribute("loginOn", false);
+            httpRequest.setAttribute("topRoleCurrnetUser", topRoleCurrnetUser);
             chain.doFilter(request, response);
             return;
         }
-        httpRequest.setAttribute("loginOn", true);
-        String topRoleCurrnetUser = userRolesFacade.getTopRoleName(user);
-        httpRequest.setAttribute("topRoleCurrnetUser", topRoleCurrnetUser);
+        topRoleCurrnetUser = userRolesFacade.getTopRoleName(user);
+        if(topRoleCurrnetUser == null){
+            httpRequest.setAttribute("topRoleCurrnetUser", topRoleCurrnetUser);
+            chain.doFilter(request, response);
+            return;
+        }
+        request.setAttribute("topRoleCurrnetUser", topRoleCurrnetUser);
         chain.doFilter(request, response);
     }
+    @Override
     public void init(FilterConfig filterConfig) {        
     }
     @Override

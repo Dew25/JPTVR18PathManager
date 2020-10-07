@@ -1,12 +1,30 @@
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 
-    <h1>Создание нового ресурса!</h1>
     <form action="createResource" method="POST">
-      Имя ресурса: <input type="text" name="name"><br>
-      URL ресурса: <input type="text" name="url"><br>
-      Логин: <input type="text" name="login"><br>
-      Пароль: <input type="text" name="password"><br>
-      <input type="submit" value="Создать">
+      <h3 class="w-100 text-center ">Создание нового ресурса!</h3>
+    <div class="form-group w-50 mx-auto">    
+        <label for="name">Название ресурса</label>
+        <input value="${name}" type="text" class="form-control" id="name" name="name" aria-describedby="nameHelp" placeholder="name">
+        <small id="nameHelp" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group w-50 mx-auto">    
+        <label for="url">Url ресурса</label>
+        <input value="${url}" type="text" class="form-control" id="url" name="url" aria-describedby="urlHelp" placeholder="url">
+        <small id="urlHelp" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group w-50 mx-auto">    
+        <label for="login">Логин</label>
+        <input value="${login}" type="text" class="form-control" id="login" name="login" aria-describedby="loginHelp" placeholder="Логин">
+        <small id="emailHelp" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group w-50 mx-auto">    
+        <label for="password">Пароль</label>
+        <input value="${password}" type="text" class="form-control" id="password" name="password" aria-describedby="passwordHelp" placeholder="Пароль">
+        <small id="emailHelp" class="form-text text-muted"></small>
+    </div>
+    <div class="form-group w-50 mx-auto text-center">
+        <button type="submit" class="btn btn-primary w-50 mt-4">Добавить ресурс</button>
+    </div>
     </form>
   

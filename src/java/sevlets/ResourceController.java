@@ -82,6 +82,17 @@ public class ResourceController extends HttpServlet {
                 String url = request.getParameter("url");
                 String login = request.getParameter("login");
                 String password = request.getParameter("password");
+                if(name.isEmpty() || url.isEmpty()
+                       || login.isEmpty() || password.isEmpty()){
+                    request.setAttribute("name", name);
+                    request.setAttribute("url", url);
+                    request.setAttribute("login", login);
+                    request.setAttribute("password", password);
+                    request.setAttribute("info", "Заполните все поля");
+                    request.getRequestDispatcher("/pages/showFormAddResource.jsp")
+                            .forward(request, response);
+                    break;
+                }
                 Resource resource = new Resource(name, url, login, password);
                 resourceFacade.create(resource);
                 Calendar c = new GregorianCalendar();
@@ -147,7 +158,7 @@ public class ResourceController extends HttpServlet {
                 resource.setPassword(password);
                 resourceFacade.edit(resource);
                 request.setAttribute("resource", resource);
-                request.getRequestDispatcher("/pages/showResource.jsp")
+                request.getRequestDispatcher("/listResources")
                         .forward(request, response);
                 break;
             

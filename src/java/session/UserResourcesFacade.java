@@ -35,6 +35,5 @@ public class UserResourcesFacade extends AbstractFacade<UserResources> {
         em.createQuery("DELETE FROM UserResources ur WHERE ur.resource = :resource")
                 .setParameter("resource", deleteResource)
                 .executeUpdate();
-   }
-    
+    }
 }
