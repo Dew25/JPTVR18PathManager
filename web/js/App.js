@@ -68,11 +68,45 @@ function addFormNewResource(){
                   <button id="btnAddResource" type="button" class="btn btn-primary w-50 mt-4">Добавить ресурс</button>
               </div>
               </form>`;
-    document.getElementById("btnAddResource").oncklick = function(){
-      createResource();
-    }
-    function createResource(){
-      alert("funnction createResource() runing");
-    }
+  document.getElementById("btnAddResource").addEventListener("click",function(e){
+    e.preventDefault();
+    createResource();
+  });
 }
+  function createResource(){
+    let name = document.getElementById("name").value;
+    let url = document.getElementById("url").value;
+    let login = document.getElementById("login").value;
+    let password = document.getElementById("password").value;
+    let data = {
+      "name":name,
+      "url":url,
+      "login":login,
+      "password":password,
+    };
+    fetch("createResourceJson",{"method":"POST",
+                                "headers":{'Content-Type':'application/json;charset=utf-8'},
+                                "body": JSON.stringify(data)
+                              })
+                              .then(response =>{
+                                if(response.status >= 200 & response.status < 300){
+                                  return Promise.resolve(response)
+                                }
+                              })
+                              .then(response => {
+                                return response.json()
+                              })
+                              .catch((ex)=> console.log("Fetch Exception",ex))
+                              .then(function(response){
+                                if(response === null || response === undefined){
+                                  document.getElementById("info").innerHTML = 'Не получены данные';
+                                }else{
+                                  document.getElementById("info").innerHTML = 'Ресурс '+response.data.name +' добавлен';
+                                }
+                              }
+                              );     
+                                           
+                              
+  }
+
 
