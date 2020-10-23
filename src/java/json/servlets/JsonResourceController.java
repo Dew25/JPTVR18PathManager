@@ -6,9 +6,9 @@
 package json.servlets;
 
 import entity.Resource;
+import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import javax.ejb.EJB;
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -20,17 +20,23 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import json.builders.ResourceJsonBuilder;
+import json.builders.UserJsonBuilder;
 import session.ResourceFacade;
+import session.UserFacade;
+import utils.MakeHash;
 
 /**
  *
  * @author Melnikov
  */
 @WebServlet(name = "JsonResourceController", urlPatterns = {
-    "/createResourceJson"
+    "/createResourceJson",
+    "/createUserJson",
+    
 })
 public class JsonResourceController extends HttpServlet {
 @EJB private ResourceFacade resourceFacade;
+@EJB private UserFacade userFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -69,6 +75,28 @@ public class JsonResourceController extends HttpServlet {
                 job.add("info", "Ресурс успешно добавлен");
                 ResourceJsonBuilder resourceJsonBuilder = new ResourceJsonBuilder();
                 job.add("data", resourceJsonBuilder.createJsonResource(resource));
+                json = job.build().toString();
+                break;
+            case "/createUserJson":
+                jsonObject = jsonReader.readObject();
+                login = jsonObject.getString("login");
+                password = jsonObject.getString("password");
+                if(login == null || login.isEmpty()
+                       || password == null || password.isEmpty()
+                                ){
+                    job.add("info", "Заполните все поля");
+                    json = job.build().toString();
+                    //json = "{\"info\":\"Заполните все поля\"}";
+                    break;
+                }
+                MakeHash mh = new MakeHash();
+                String salts = mh.createSalts();
+                password = mh.createHash(password, salts);
+                User user = new User(login, password, salts);
+                userFacade.create(user);
+                job.add("info", "пользователь "+user.getLogin()+" успешно добавлен");
+                UserJsonBuilder userJsonBuilder = new UserJsonBuilder();
+                job.add("data", userJsonBuilder.createJsonUser(user));
                 json = job.build().toString();
                 break;
             
