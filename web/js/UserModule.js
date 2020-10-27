@@ -50,6 +50,7 @@ class UserModule{
               }else{
                 document.getElementById("info").innerHTML = 'Пользователь '+response.data.login +' добавлен';
                 document.getElementById("contentPage").innerHTML='';
+                
               }
             }
             );
