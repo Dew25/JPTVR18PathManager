@@ -21,6 +21,13 @@ class AuthModule{
                Нет логина? <a id="btnRegistration" href="">Зарегистрируйтесь</a>
             </small>
     </div>`;
+    
+    document.getElementById("password").addEventListener("keydown",function(e){
+      if(e.keyCode === 13){
+        e.preventDefault();
+        authModule.login();
+      }
+    });
     document.getElementById("btnLogin").addEventListener("click",function(e){
       e.preventDefault();
       authModule.login();

@@ -13,11 +13,12 @@ document.getElementById("addResource").onclick = function(e){
 document.getElementById("addUser").onclick = function(e){
   e.preventDefault();
   toogleMenuActive("addUser");
-  authModule.addFormNewUser();
+  userModule.addFormNewUser();
 }
 document.getElementById("listResources").onclick = function(e){
   e.preventDefault();
   toogleMenuActive("listResources");
+  resourceModule.showListResources();
 }
 document.getElementById("listUsers").onclick = function(e){
   e.preventDefault();
