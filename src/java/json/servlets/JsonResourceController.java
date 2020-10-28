@@ -106,7 +106,7 @@ public class JsonResourceController extends HttpServlet {
                 break;
             case "/getListResourcesJson":
                 jsonObject = jsonReader.readObject();
-                String id = jsonObject.getInt("id");
+                int id = jsonObject.getInt("id");
                 String JSESSIONID = jsonObject.getString("JSESSIONID");
                 HttpSession session = request.getSession(false);
                 if(!JSESSIONID.equals(session.getId())){
@@ -122,7 +122,8 @@ public class JsonResourceController extends HttpServlet {
                     //json = "{\"info\":\"Заполните все поля\"}";
                     break;
                 }
-                if(!id.equals(user.getId())){
+                
+                if(id != user.getId()){
                     job.add("info", "Вам следует залогиниться");
                     json = job.build().toString();
                     //json = "{\"info\":\"Заполните все поля\"}";
