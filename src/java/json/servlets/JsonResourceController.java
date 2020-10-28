@@ -7,8 +7,11 @@ package json.servlets;
 
 import entity.Resource;
 import entity.User;
+import entity.UserResources;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.json.Json;
@@ -26,6 +29,7 @@ import json.builders.ResourceJsonBuilder;
 import json.builders.UserJsonBuilder;
 import session.ResourceFacade;
 import session.UserFacade;
+import session.UserResourcesFacade;
 import utils.MakeHash;
 
 /**
@@ -41,6 +45,7 @@ import utils.MakeHash;
 public class JsonResourceController extends HttpServlet {
 @EJB private ResourceFacade resourceFacade;
 @EJB private UserFacade userFacade;
+@EJB private UserResourcesFacade userResourcesFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -77,6 +82,14 @@ public class JsonResourceController extends HttpServlet {
                 }
                 Resource resource = new Resource(name, url, login, password);
                 resourceFacade.create(resource);
+                UserResources userResources = new UserResources();
+                userResources.setResource(resource);
+                HttpSession session = request.getSession(false);
+                User user = (User) session.getAttribute("user");
+                userResources.setUser(user);
+                Calendar c = new GregorianCalendar();
+                userResources.setDate(c.getTime());
+                userResourcesFacade.create(userResources);
                 job.add("info", "Ресурс успешно добавлен");
                 ResourceJsonBuilder resourceJsonBuilder = new ResourceJsonBuilder();
                 job.add("data", resourceJsonBuilder.createJsonResource(resource));
