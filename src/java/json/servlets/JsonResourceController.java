@@ -110,7 +110,7 @@ public class JsonResourceController extends HttpServlet {
                 MakeHash mh = new MakeHash();
                 String salts = mh.createSalts();
                 password = mh.createHash(password, salts);
-                User user = new User(login, password, salts);
+                user = new User(login, password, salts);
                 userFacade.create(user);
                 job.add("info", "пользователь "+user.getLogin()+" успешно добавлен");
                 UserJsonBuilder userJsonBuilder = new UserJsonBuilder();
@@ -121,7 +121,7 @@ public class JsonResourceController extends HttpServlet {
                 jsonObject = jsonReader.readObject();
                 int id = jsonObject.getInt("id");
                 String JSESSIONID = jsonObject.getString("JSESSIONID");
-                HttpSession session = request.getSession(false);
+                session = request.getSession(false);
                 if(!JSESSIONID.equals(session.getId())){
                     job.add("info", "Вам следует залогиниться");
                     json = job.build().toString();

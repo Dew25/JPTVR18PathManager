@@ -147,13 +147,37 @@ class ResourceModule{
                   <input value="${resource.password}" type="text" class="form-control" id="password" name="password" aria-describedby="passwordHelp" placeholder="Пароль">
                   <small id="emailHelp" class="form-text text-muted"></small>
               </div>
-              <div class="form-group w-50 mx-auto text-center">
-                  <button id="btnEditResource" type="button" class="btn btn-primary w-50 mt-4">Изменить ресурс</button>
+              <div id="btnChangeResource" class="form-group w-50 mx-auto text-center">
+                  <button id="btnChangeResource" type="button" class="btn btn-primary w-50 mt-4">Изменить ресурс</button>
+              </div>
+              <div id="btnSaveResource" class="form-group w-50 mx-auto text-center display-none">
+                  <button id="btnSaveResource" type="button" class="btn btn-primary w-50 mt-4">Сохранить ресурс</button>
               </div>`;
-    document.getElementById('btnEditResource').addEventListener("click",resourceModule.editResource);          
+    document.getElementById('btnChangeResource').addEventListener("click",resourceModule.doEnabledInputs);          
+    document.getElementById('btnSaveResource').addEventListener("click",resourceModule.saveResource); 
+    resourceModule.accessToControll(false);
   }
-  editResource(){
+  doEnabledInputs(){
+    resourceModule.accessToControll(true);
+  }
+  accessToControll(enabled){
+    if(enabled){
+      document.getElementById("url").readOnly=false;
+      document.getElementById("login").readOnly=false;
+      document.getElementById("password").readOnly=false;
+      document.getElementById("btnSaveResource").style.display = "block";
+      document.getElementById("btnChangeResource").style.display = "none";
+    }else{
+      document.getElementById("url").readOnly=true;
+      document.getElementById("login").readOnly=true;
+      document.getElementById("password").readOnly=true;
+      document.getElementById("btnSaveResource").style.display = "none";
+      document.getElementById("btnChangeResource").style.display = "block";
+    }
+  }
+  saveResource(){
     alert("Edit resource!");
+    resourceModule.accessToControll(false);
   }
 }
 let resourceModule = new ResourceModule();
