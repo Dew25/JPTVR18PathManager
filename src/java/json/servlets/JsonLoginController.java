@@ -8,7 +8,6 @@ package json.servlets;
 import entity.User;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigDecimal;
 import javax.ejb.EJB;
 import javax.json.Json;
 import javax.json.JsonObject;

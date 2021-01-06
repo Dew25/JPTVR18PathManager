@@ -134,6 +134,7 @@ class ResourceModule{
           ` <h3 class="w-100 text-center ">${resource.name}</h3>
               <div class="form-group w-50 mx-auto">    
                   <label for="url">Url ресурса</label>
+                  <input  value="${resource.id}" type="hidden" id="resourceId" name="id">
                   <input value="${resource.url}" type="text" class="form-control" id="url" name="url" aria-describedby="urlHelp" placeholder="url">
                   <small id="urlHelp" class="form-text text-muted"></small>
               </div>
@@ -154,7 +155,7 @@ class ResourceModule{
                   <button id="btnSaveResource" type="button" class="btn btn-primary w-50 mt-4">Сохранить ресурс</button>
               </div>`;
     document.getElementById('btnChangeResource').addEventListener("click",resourceModule.doEnabledInputs);          
-    document.getElementById('btnSaveResource').addEventListener("click",resourceModule.saveResource); 
+    document.getElementById('btnSaveResource').addEventListener("click",resourceModule.saveEditResource); 
     resourceModule.accessToControll(false);
   }
   doEnabledInputs(){
@@ -175,8 +176,40 @@ class ResourceModule{
       document.getElementById("btnChangeResource").style.display = "block";
     }
   }
-  saveResource(){
-    alert("Edit resource!");
+  saveEditResource(){
+    let id = document.getElementById("resourceId").value;
+    let url = document.getElementById("url").value;
+    let login = document.getElementById("login").value;
+    let password = document.getElementById("password").value;
+    let editResource = {
+      "id": id,
+      "url": url,
+      "login": login,
+      "password": password
+    }
+    fetch("saveEditResourceJson",{"method":"POST",
+                                "headers":{'Content-Type':'application/json;charset=utf-8'},
+                                "body": JSON.stringify(editResource)
+                              })
+                              .then(response =>{
+                                if(response.status >= 200 & response.status < 300){
+                                  return Promise.resolve(response)
+                                }
+                              })
+                              .then(response => {
+                                return response.json()
+                              })
+                              .catch((ex)=> console.log("Fetch Exception",ex))
+                              .then(function(response){
+                                if(response === null || response === undefined){
+                                  document.getElementById("info").innerHTML = 'Не получены данные';
+                                }else{
+                                  document.getElementById("info").innerHTML = 'Rесурс доставлен';
+                                  resourceModule.printResource(response.data.resource);
+                                }
+                              }
+                              );    
+    
     resourceModule.accessToControll(false);
   }
 }

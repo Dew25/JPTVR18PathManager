@@ -39,7 +39,8 @@ import utils.MakeHash;
 @WebServlet(name = "JsonResourceController", urlPatterns = {
     "/createResourceJson",
     "/createUserJson",
-    "/getListResourcesJson"
+    "/getListResourcesJson",
+    "/saveEditResourceJson"
     
 })
 public class JsonResourceController extends HttpServlet {
@@ -151,7 +152,20 @@ public class JsonResourceController extends HttpServlet {
                 }
                 json = job.add("listResources", jab.build()).build().toString();
                 break;
-            
+            case "/saveEditResourceJson":
+                jsonObject = jsonReader.readObject();
+                String idResource = jsonObject.getString("id");
+                url = jsonObject.getString("url");
+                login = jsonObject.getString("login");
+                password = jsonObject.getString("password");
+                resource = resourceFacade.find(Long.parseLong(idResource));
+                resource.setUrl(url);
+                resource.setUrl(login);
+                resource.setUrl(password);
+                resourceFacade.edit(resource);
+                rjb = new ResourceJsonBuilder();
+                json = job.add("data", job.add("info", "ресурс изменен").add("resource",rjb.createJsonResource(resource))).build().toString();
+                break;
         }
         if(!"".equals(json)){
             try(PrintWriter out = response.getWriter()){
