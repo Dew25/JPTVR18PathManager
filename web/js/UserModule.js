@@ -49,11 +49,42 @@ class UserModule{
                 document.getElementById("info").innerHTML = 'Не получены данные';
               }else{
                 document.getElementById("info").innerHTML = 'Пользователь '+response.data.login +' добавлен';
-                document.getElementById("contentPage").innerHTML='';
+                userModule.addFormNewUser();
                 
               }
             }
             );
+  }
+  listUsersForm(){
+    let user = JSON.parse(sessionStorage.getItem('user'));
+    if(user === null){
+      document.getElementById("info").innerHTML = 'Войдите в систему';
+      authModule.showFormLogin();
+      return;
+    }
+    fetch("getListUsersJson",{"method":"POST",
+                                "headers":{'Content-Type':'application/json;charset=utf-8'},
+                                "body": JSON.stringify(user)
+                              })
+                              .then(response =>{
+                                if(response.status >= 200 & response.status < 300){
+                                  return Promise.resolve(response)
+                                }
+                              })
+                              .then(response => {
+                                return response.json()
+                              })
+                              .catch((ex)=> console.log("Fetch Exception",ex))
+                              .then(function(response){
+                                if(response === null || response === undefined){
+                                  document.getElementById("info").innerHTML = 'Не получены данные';
+                                }else{
+                                  document.getElementById("info").innerHTML = 'Список ресурсов доставлен';
+                                  document.getElementById("contentPage").innerHTML='';
+                                  resourceModule.createSelectResources(response.listResources);
+                                }
+                              }
+                              );    
   }
 }
 let userModule = new UserModule();

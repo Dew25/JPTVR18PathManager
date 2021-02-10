@@ -62,13 +62,21 @@ public class ResourceController extends HttpServlet {
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);
+            return;
         }
         User user = (User) session.getAttribute("user");
+        if(user == null){
+            request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
+            request.getRequestDispatcher("/showFormLogin")
+                .forward(request, response);
+            return;
+        }
         //UserManager userManager = new UserManager();
         if(!userRolesFacade.checkRole(user,"USER")){
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);
+            return;
         }
         
         String path = request.getServletPath();

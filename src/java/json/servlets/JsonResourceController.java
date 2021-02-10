@@ -6,8 +6,10 @@
 package json.servlets;
 
 import entity.Resource;
+import entity.Role;
 import entity.User;
 import entity.UserResources;
+import entity.UserRoles;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Calendar;
@@ -28,8 +30,10 @@ import javax.servlet.http.HttpSession;
 import json.builders.ResourceJsonBuilder;
 import json.builders.UserJsonBuilder;
 import session.ResourceFacade;
+import session.RoleFacade;
 import session.UserFacade;
 import session.UserResourcesFacade;
+import session.UserRolesFacade;
 import utils.MakeHash;
 
 /**
@@ -46,7 +50,9 @@ import utils.MakeHash;
 public class JsonResourceController extends HttpServlet {
 @EJB private ResourceFacade resourceFacade;
 @EJB private UserFacade userFacade;
+@EJB private UserRolesFacade userRolesFacade;
 @EJB private UserResourcesFacade userResourcesFacade;
+@EJB private RoleFacade roleFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
      * methods.
@@ -112,7 +118,17 @@ public class JsonResourceController extends HttpServlet {
                 String salts = mh.createSalts();
                 password = mh.createHash(password, salts);
                 user = new User(login, password, salts);
-                userFacade.create(user);
+                try {
+                    userFacade.create(user);
+                    Role roleUser = roleFacade.getRole("USER");
+                    UserRoles ur = new UserRoles(user, roleUser);
+                    userRolesFacade.create(ur);
+                } catch (Exception e) {
+                    job.add("info", "Такой пользователь уже существует!");
+                    job.add("data", "null");
+                    json = job.build().toString();
+                    break;
+                }
                 job.add("info", "пользователь "+user.getLogin()+" успешно добавлен");
                 UserJsonBuilder userJsonBuilder = new UserJsonBuilder();
                 job.add("data", userJsonBuilder.createJsonUser(user));
@@ -155,16 +171,16 @@ public class JsonResourceController extends HttpServlet {
             case "/saveEditResourceJson":
                 jsonObject = jsonReader.readObject();
                 String idResource = jsonObject.getString("id");
-                url = jsonObject.getString("url");
-                login = jsonObject.getString("login");
-                password = jsonObject.getString("password");
-                resource = resourceFacade.find(Long.parseLong(idResource));
-                resource.setUrl(url);
-                resource.setUrl(login);
-                resource.setUrl(password);
-                resourceFacade.edit(resource);
+                Resource r = resourceFacade.find(Long.parseLong(idResource));
+                r.setUrl(jsonObject.getString("url"));
+                r.setLogin(jsonObject.getString("login"));
+                r.setPassword(jsonObject.getString("password"));
+                resourceFacade.edit(r);
                 rjb = new ResourceJsonBuilder();
-                json = job.add("data", job.add("info", "ресурс изменен").add("resource",rjb.createJsonResource(resource))).build().toString();
+                    job .add("info", "ресурс изменен")
+                        .add("resource",rjb.createJsonResource(r));
+                        
+                json = job.add("data", job.build()).build().toString();
                 break;
         }
         if(!"".equals(json)){

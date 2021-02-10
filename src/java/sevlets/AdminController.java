@@ -58,6 +58,7 @@ public class AdminController extends HttpServlet {
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);
+            return;
         }
         User user = (User) session.getAttribute("user");
         //UserManager userManager = new UserManager();
@@ -65,6 +66,7 @@ public class AdminController extends HttpServlet {
             request.setAttribute("info", "У вас нет прав для этого ресурса. Авторизуйтесь");
             request.getRequestDispatcher("/showFormLogin")
                 .forward(request, response);
+            return;
         }
         
         String path = request.getServletPath();

@@ -17,6 +17,8 @@ import javax.json.JsonObjectBuilder;
  */
 public class UserJsonBuilder {
     public JsonObject createJsonUser(User user, String JSESSIONID, String roleUser){
+        if(JSESSIONID == null) JSESSIONID = "null";
+        if(roleUser == null) roleUser = "null";
         JsonObjectBuilder job = Json.createObjectBuilder();
             job.add("id", user.getId())
                 .add("login", user.getLogin())

@@ -23,6 +23,7 @@ document.getElementById("listResources").onclick = function(e){
 document.getElementById("listUsers").onclick = function(e){
   e.preventDefault();
   toogleMenuActive("listUsers");
+  userModule.listUsersForm();
 };
 document.getElementById("systemIn").onclick = function(e){
   e.preventDefault();

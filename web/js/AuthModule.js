@@ -62,10 +62,14 @@ class AuthModule{
               if(response === null || response === undefined){
                 document.getElementById("info").innerHTML = 'Не получены данные';
               }else{
-                document.getElementById("info").innerHTML = 'Привет, '+response.data.login +'!';
-                document.getElementById("contentPage").innerHTML='';
-                sessionStorage.setItem('user',JSON.stringify(response.data));
-                authModule.authMenu();
+                if(response.data === undefined){
+                  document.getElementById("info").innerHTML = response.info;
+                }else{
+                  document.getElementById("info").innerHTML = 'Привет, '+response.data.login +'!';
+                  document.getElementById("contentPage").innerHTML='';
+                  sessionStorage.setItem('user',JSON.stringify(response.data));
+                  authModule.authMenu();
+                }
               }
             }
             );

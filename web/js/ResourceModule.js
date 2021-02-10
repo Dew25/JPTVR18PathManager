@@ -5,7 +5,7 @@ class ResourceModule{
     let url = document.getElementById("url").value;
     let login = document.getElementById("login").value;
     let password = document.getElementById("password").value;
-    let data = {
+    const data = {
       "name":name,
       "url":url,
       "login":login,
@@ -29,7 +29,7 @@ class ResourceModule{
                                   document.getElementById("info").innerHTML = 'Не получены данные';
                                 }else{
                                   document.getElementById("info").innerHTML = 'Ресурс '+response.data.name +' добавлен';
-                                  resourceModule.showListResources(response.listReaources);
+                                  resourceModule.showListResources();
                                 }
                               }
                               );     
@@ -159,6 +159,7 @@ class ResourceModule{
     resourceModule.accessToControll(false);
   }
   doEnabledInputs(){
+    document.getElementById("info").innerHTML = " ";
     resourceModule.accessToControll(true);
   }
   accessToControll(enabled){
@@ -204,8 +205,8 @@ class ResourceModule{
                                 if(response === null || response === undefined){
                                   document.getElementById("info").innerHTML = 'Не получены данные';
                                 }else{
-                                  document.getElementById("info").innerHTML = 'Rесурс доставлен';
-                                  resourceModule.printResource(response.data.resource);
+                                  document.getElementById("info").innerHTML = response.data.info;
+                                  resourceModule.showListResources();
                                 }
                               }
                               );    
