@@ -5,18 +5,14 @@
  */
 package json.servlets;
 
-import entity.Resource;
+import entity.Role;
 import entity.User;
-import entity.UserResources;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 import javax.ejb.EJB;
 import javax.json.Json;
 import javax.json.JsonArrayBuilder;
-import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonReader;
 import javax.servlet.ServletException;
@@ -24,13 +20,12 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import json.builders.ResourceJsonBuilder;
+import json.builders.RoleJsonBuilder;
 import json.builders.UserJsonBuilder;
 import session.ResourceFacade;
+import session.RoleFacade;
 import session.UserFacade;
 import session.UserResourcesFacade;
-import utils.MakeHash;
 
 /**
  *
@@ -43,6 +38,7 @@ import utils.MakeHash;
 public class JsonAdminController extends HttpServlet {
 @EJB private ResourceFacade resourceFacade;
 @EJB private UserFacade userFacade;
+@EJB private RoleFacade roleFacade;
 @EJB private UserResourcesFacade userResourcesFacade;
     /**
      * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
@@ -64,7 +60,19 @@ public class JsonAdminController extends HttpServlet {
         String path = request.getServletPath();
         switch (path) {
             case "/getListUsersJson":
-                
+                List<User> listUsers = userFacade.findAll();
+                for(User user : listUsers){
+                    UserJsonBuilder ujb = new UserJsonBuilder();
+                    jab.add(ujb.createJsonUser(user));
+                }
+                job.add("listUsers", jab.build());
+                List<Role>listRoles = roleFacade.findAll();
+                for(Role role : listRoles){
+                    RoleJsonBuilder rjb = new RoleJsonBuilder();
+                    jab.add(rjb.createJsonRole(role));
+                }
+                job.add("listRoles", jab.build());
+                json = job.build().toString();
                 break;
         }
         if(!"".equals(json)){

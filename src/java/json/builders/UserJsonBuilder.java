@@ -5,9 +5,14 @@
  */
 package json.builders;
 
+import entity.Role;
 import entity.User;
 import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 
@@ -29,5 +34,16 @@ public class UserJsonBuilder {
     }
     public JsonObject createJsonUser(User user){
         return createJsonUser(user, null, null);
+    }
+    public JsonObject createJsonMapUserRoles(User user, List<Role> roles){
+        RoleJsonBuilder rjb = new RoleJsonBuilder();
+        UserJsonBuilder ujb = new UserJsonBuilder();
+        Map<User,Object> userRolesMap = new HashMap<>();
+        JsonArrayBuilder jab = Json.createArrayBuilder();
+        for(Role role: roles){
+             jab.add(rjb.createJsonRole(role));
+        }
+        
+        userRolesMap.put(user, roles)
     }
 }

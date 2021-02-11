@@ -63,7 +63,7 @@ class UserModule{
       return;
     }
     fetch("getListUsersJson",{"method":"POST",
-                                "headers":{'Content-Type':'application/json;charset=utf-8'},
+                                "headers":{"Content-Type":"application/json;charset=utf-8"},
                                 "body": JSON.stringify(user)
                               })
                               .then(response =>{
@@ -81,11 +81,33 @@ class UserModule{
                                 }else{
                                   document.getElementById("info").innerHTML = 'Список ресурсов доставлен';
                                   document.getElementById("contentPage").innerHTML='';
-                                  resourceModule.createSelectResources(response.listResources);
+                                  userModule.createSelectUsers(response.listUsers);
+                                  userModule.createSelectRoles(response.listRoles);
                                 }
                               }
                               );    
   }
+  createSelectUsers(listUsers){
+    
+    let select = document.createElement('select');
+    select.setAttribute("id",'userId');
+    select.setAttribute("class",'custom-select w-50 mx-auto');
+    
+    for (var i = 0; i < listUsers.length; i++) {
+      select.options[select.options.length] = new Option(listUsers[i].login, listUsers[i].id);
+    }
+    document.getElementById("contentPage").insertAdjacentHTML('afterbegin',
+    `<h3 class="w-100 text-center ">Список пользователей:</h3>
+    <div id="selectListUsers" class="form-group w-50 mx-auto text-center">
+    </div>`);
+   let selectListUsers = document.getElementById('selectListUsers');
+   while(selectListUsers.firstChild){
+     selectListUsers.removeChild(selectListUsers.firstChild);
+   }
+   selectListUsers.appendChild(select);
+   select.selectedIndex = -1;
+  }
+  
 }
 let userModule = new UserModule();
 export {userModule};
